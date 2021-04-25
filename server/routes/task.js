@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
 const Task = require('../model/Task.model');
-const db = 'mongodb://localhost/todo';
+const db = 'mongodb+srv://todoAppGroup2:hightech@todo.v0rns.mongodb.net/todo?retryWrites=true&w=majority';
 
 mongoose.connect(db);
 
