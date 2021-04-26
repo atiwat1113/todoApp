@@ -23,7 +23,7 @@ const App = () => {
   }, [])
 
   //login
-  const checkValidUser = async ({username,password}) => {
+  const checkValidUser = async ({username,password,history}) => {
     const res = await fetch('http://localhost:5000/user', {
       method: 'POST',
       headers: {
@@ -36,13 +36,10 @@ const App = () => {
 
     if (data.username===username && data.password===password) {
       console.log("true");
-      <Route render={props => 
-        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-        } />
+      history.push('/todo');
     } else {
       alert("Invalid username or password");
       console.log("false");
-      
     }
   }
 
