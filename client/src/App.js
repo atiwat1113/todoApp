@@ -31,11 +31,18 @@ const App = () => {
       },
       body: JSON.stringify({username,password}) // javascript to json
     })
-    const data = await res.json()
-    if (data.username === username && data.password===password ){
+
+    const data = await res.json();
+
+    if (data.username===username && data.password===password) {
+      console.log("true");
       <Route render={props => 
-          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-    } />
+        <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+        } />
+    } else {
+      alert("Invalid username or password");
+      console.log("false");
+      
     }
   }
 
