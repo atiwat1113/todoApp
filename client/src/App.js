@@ -22,6 +22,15 @@ const App = () => {
     getTasks()
   }, [])
 
+  //login
+  const checkValidUser = async ({username,password}) => {
+    const res = await fetch('http://localhost:5000/user')
+    const data = await res.json()
+    if (data.map((user) => user.username === username && user.password==password )){
+      //location.pathname = '/todo';
+    }
+  }
+
   //Fetch Tasks
   const fetchTasks = async () => {
     const res = await fetch('http://localhost:5000/tasks')
@@ -88,8 +97,10 @@ const App = () => {
     <Router>
       <div className = 'container'>
         <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} />
-        <Route path='/login' component={Login} />
-        <Route path='/' exact render={(props) => (
+        <Route exact path='/' render={(props) => (
+          <Login onLogin={checkValidUser} />
+        )} />
+        <Route path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show'}
