@@ -29,7 +29,11 @@ router.post('/', (req, res) => {
                 res.send({});
             }else {
                 req.session.username = user.username;
+                console.log(req.session);
                 res.send(user);
+               
+                
+
             }
         }
     });

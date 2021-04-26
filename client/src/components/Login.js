@@ -1,11 +1,9 @@
 import React from 'react'
 import {useState} from 'react'
-import { useHistory } from "react-router-dom";
 
 export const Login = ({onLogin}) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    let history = useHistory();
 
     const onClick = (e) => {
         e.preventDefault()
@@ -14,7 +12,7 @@ export const Login = ({onLogin}) => {
             alert('Please enter username and password')
             return
         }
-        onLogin({username,password,history}); 
+        onLogin({username,password}); 
         setPassword('')
     }
 

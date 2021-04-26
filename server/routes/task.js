@@ -49,7 +49,7 @@ router.post('/', (req, res) => {
 // --------------Put--------------
 router.put('/:id', (req, res) => {
     Task.findOneAndUpdate({
-        taskId: req.params.id
+        _id: req.params.id
     }, {$set: 
     {
         name: req.body.name,

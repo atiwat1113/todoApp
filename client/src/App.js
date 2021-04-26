@@ -23,7 +23,7 @@ const App = () => {
   }, [])
 
   //login
-  const checkValidUser = async ({username,password,history}) => {
+  const checkValidUser = async ({username,password}) => {
     const res = await fetch('http://localhost:5000/user', {
       method: 'POST',
       headers: {
@@ -36,7 +36,6 @@ const App = () => {
 
     if (data.username===username && data.password===password) {
       console.log("true");
-      history.push('/todo');
     } else {
       alert("Invalid username or password");
       console.log("false");
@@ -83,7 +82,7 @@ const App = () => {
     await fetch(`http://localhost:5000/tasks/${id}`, {
       method: 'DELETE'
     })
-
+    
     setTasks(tasks.filter((task) => task.id !== id))
   }
 
