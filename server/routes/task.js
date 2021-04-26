@@ -17,30 +17,31 @@ router.get('/all', (req, res) => {
     });
 });
 
+router.get('/', (req, res) => {
+    Task.find({user: req.session.username}).exec((err, tasks) => {
+        if(err){
+            res.send('error has occured: ' + err.message);
+        } else {
+            res.send(tasks);
+        }
+    });
+});
+
 // --------------Post--------------
 router.post('/', (req, res) => {
     let newTask = new Task();
 
     newTask.name = req.body.name;
     newTask.dueDate = req.body.dueDate;
-    newTask.user = req.session.user;
+    newTask.user = req.session.username;
     newTask.done = req.body.done;
+    console.log(req.session.username);
 
     newTask.save((err, task) => {
         if(err) {
             res.send('error creating a new task: ' + err.message);
         } else {
             res.send(task);
-        }
-    });
-});
-
-router.post('/', (req, res) => {
-    Task.find({user: req.session.username}).exec((err, tasks) => {
-        if(err){
-            res.send('error has occured: ' + err.message);
-        } else {
-            res.send(tasks);
         }
     });
 });
