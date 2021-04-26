@@ -10,7 +10,7 @@ const Header = ({title, onAdd, showAdd}) => {
             {/* <h1 style={{color: 'red', backgroundColor: 'black'}}>{title}</h1> */}
             {/* <h1 style = {headingStyle}>{title}</h1> */}
             <h1>{title}</h1>
-            {location.pathname === '/' && <Button color={showAdd ? 'darkred' : 'darkgreen'} text={showAdd ? 'Close' : 'Add'} onClick={onAdd}/>}
+            {location.pathname === '/todo' && <Button color={showAdd ? 'darkred' : 'darkgreen'} text={showAdd ? 'Close' : 'Add'} onClick={onAdd}/>}
         </header>
     )
 }
