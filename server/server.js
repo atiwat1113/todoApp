@@ -24,6 +24,10 @@ app.use(cors(corsOptions));
 app.use('/user', userRouter);
 app.use('/tasks', taskRouter);
 
+app.get('/', (req, res) => {
+    res.send('todoapp server');
+})
+
 app.listen(port, () => {
     console.log(`app listening on port ${port}`);
 });

@@ -28,7 +28,8 @@ router.get('/', (req, res) => {
             if(user === null){
                 res.send('Invalid');
             }else {
-                req.session.username = username;
+                req.session.username = user.username;
+                //res.send(user);
                 res.redirect('/todo');
             }
         }
