@@ -34,7 +34,7 @@ const App = () => {
       body: JSON.stringify({username,password}) // javascript to json
     })
     const data = await res.json()
-    if (data.map((user) => user.username === username && user.password===password )){
+    if (data.username === username && data.password===password ){
       history.push("/todo");
     }
   }
