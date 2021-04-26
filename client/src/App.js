@@ -1,6 +1,6 @@
 //import React from 'react'
 import {useState, useEffect} from 'react'
-import {BrowserRouter as Router, Route, Link, useHistory} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link, Redirect} from 'react-router-dom'
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
@@ -12,8 +12,6 @@ const App = () => {
   const [showAddTask, setShowAddTask] = useState(true)
 
   const [tasks, setTasks] = useState([])
-
-  const history = useHistory();
 
   useEffect(() => {
     const getTasks = async () => {
@@ -35,7 +33,7 @@ const App = () => {
     })
     const data = await res.json()
     if (data.username === username && data.password===password ){
-      history.push("/todo");
+      <Redirect to={{ pathname: '/todo', state: { from: this.location } }} />
     }
   }
 
