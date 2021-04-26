@@ -1,6 +1,6 @@
 //import React from 'react'
 import {useState, useEffect} from 'react'
-import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link, useHistory} from 'react-router-dom'
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
@@ -12,6 +12,8 @@ const App = () => {
   const [showAddTask, setShowAddTask] = useState(true)
 
   const [tasks, setTasks] = useState([])
+
+  const history = useHistory();
 
   useEffect(() => {
     const getTasks = async () => {
@@ -25,15 +27,15 @@ const App = () => {
   //login
   const checkValidUser = async ({username,password}) => {
     const res = await fetch('http://localhost:5000/user', {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-type': 'application/json'
       },
       body: JSON.stringify({username,password}) // javascript to json
     })
     const data = await res.json()
-    if (data.map((user) => user.username === username && user.password==password )){
-      //location.pathname = '/todo';
+    if (data.map((user) => user.username === username && user.password===password )){
+      history.push("/todo");
     }
   }
 
