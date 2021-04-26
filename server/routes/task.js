@@ -7,7 +7,7 @@ const db = 'mongodb+srv://todoAppGroup2:hightech@todo.v0rns.mongodb.net/todo?ret
 mongoose.connect(db);
 
 // --------------Get--------------
-router.get('/', (req, res) => {
+router.get('/all', (req, res) => {
     Task.find().exec((err, tasks) => {
         if(err){
             res.send('error has occured: ' + err.message);
@@ -17,8 +17,8 @@ router.get('/', (req, res) => {
     });
 });
 
-router.get('/:username', (req, res) => {
-    Task.find({user: req.params.username}).exec((err, tasks) => {
+router.get('/', (req, res) => {
+    Task.find({user: req.session.username}).exec((err, tasks) => {
         if(err){
             res.send('error has occured: ' + err.message);
         } else {
