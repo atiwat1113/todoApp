@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
 });
 
 // sign up
-router.post('/', (req, res) => {
+router.post('/signup', (req, res) => {
     let newUser = new User();
 
     newUser.username = req.body.username;
