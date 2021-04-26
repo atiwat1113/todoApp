@@ -33,7 +33,9 @@ const App = () => {
     })
     const data = await res.json()
     if (data.username === username && data.password===password ){
-      <Redirect to={{ pathname: '/todo' }} />
+      <Route render={props => 
+          <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
+    } />
     }
   }
 
