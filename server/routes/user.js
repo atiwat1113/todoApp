@@ -16,6 +16,7 @@ router.get('/users', (req, res) => {
     })
 });
 
+// sign in
 router.get('/:username/:password', (req, res) => {
     User.findOne({
         username: req.params.username,
@@ -33,6 +34,7 @@ router.get('/:username/:password', (req, res) => {
     });
 });
 
+// sign up
 router.post('/:username/:password', (req, res) => {
     let newUser = new User();
 
