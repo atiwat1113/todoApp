@@ -26,7 +26,7 @@ router.post('/', (req, res) => {
             res.send('error has occured');
         } else {
             if(user === null){
-                res.send('Invalid');
+                res.send(user);
             }else {
                 req.session.username = user.username;
                 res.send(user);
