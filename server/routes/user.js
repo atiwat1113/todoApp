@@ -17,7 +17,7 @@ router.get('/users', (req, res) => {
 });
 
 // sign in
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
     User.findOne({
         username: req.body.username,
         password: req.body.password
@@ -29,8 +29,7 @@ router.get('/', (req, res) => {
                 res.send('Invalid');
             }else {
                 req.session.username = user.username;
-                //res.send(user);
-                res.redirect('/todo');
+                res.send(user);
             }
         }
     });
