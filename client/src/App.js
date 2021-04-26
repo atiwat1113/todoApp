@@ -8,7 +8,7 @@ import Footer from './components/Footer'
 import About from './components/About'
 import Login from './components/Login'
 
-const App = () => {
+const App = () => { 
   const [showAddTask, setShowAddTask] = useState(true)
 
   const [tasks, setTasks] = useState([])
