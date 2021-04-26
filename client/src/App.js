@@ -1,6 +1,6 @@
 //import React from 'react'
 import {useState, useEffect} from 'react'
-import {BrowserRouter as Router, Route} from 'react-router-dom'
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom'
 import Header from './components/Header'
 import Tasks from './components/Tasks'
 import AddTask from './components/AddTask'
@@ -9,7 +9,7 @@ import About from './components/About'
 import Login from './components/Login'
 
 const App = () => {
-  const [showAddTask, setShowAddTask] = useState(false)
+  const [showAddTask, setShowAddTask] = useState(true)
 
   const [tasks, setTasks] = useState([])
 
@@ -24,7 +24,13 @@ const App = () => {
 
   //login
   const checkValidUser = async ({username,password}) => {
-    const res = await fetch('http://localhost:5000/user')
+    const res = await fetch('http://localhost:5000/user', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify({username,password}) // javascript to json
+    })
     const data = await res.json()
     if (data.map((user) => user.username === username && user.password==password )){
       //location.pathname = '/todo';
@@ -103,7 +109,8 @@ const App = () => {
         <Route path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
-            {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show'}
+            {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show' }
+            <p><Link to="/" style={{float: 'right'}}>Log out</Link></p>
           </>
         )} />
         <Route path='/about' component={About} />

@@ -28,7 +28,7 @@ export const Login = ({onLogin}) => {
                 <label>Password</label>
                 <input type='password' placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
-            <button style={{color:'black'}} onClick={onClick}>Sign in</button>
+            <button className='btn' onClick={onClick}>Sign in</button>
         </form>
     )
 }
