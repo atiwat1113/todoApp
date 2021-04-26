@@ -17,24 +17,13 @@ router.get('/all', (req, res) => {
     });
 });
 
-router.get('/', (req, res) => {
-    Task.find({user: req.session.username}).exec((err, tasks) => {
-        if(err){
-            res.send('error has occured: ' + err.message);
-        } else {
-            res.send(tasks);
-        }
-    });
-});
-
 // --------------Post--------------
 router.post('/', (req, res) => {
     let newTask = new Task();
 
-    newTask.taskId = req.body.taskId;
     newTask.name = req.body.name;
     newTask.dueDate = req.body.dueDate;
-    newTask.user = req.body.user;
+    newTask.user = req.session.user;
     newTask.done = req.body.done;
 
     newTask.save((err, task) => {
@@ -42,6 +31,16 @@ router.post('/', (req, res) => {
             res.send('error creating a new task: ' + err.message);
         } else {
             res.send(task);
+        }
+    });
+});
+
+router.post('/', (req, res) => {
+    Task.find({user: req.session.username}).exec((err, tasks) => {
+        if(err){
+            res.send('error has occured: ' + err.message);
+        } else {
+            res.send(tasks);
         }
     });
 });
@@ -69,7 +68,7 @@ router.put('/:id', (req, res) => {
 // --------------Delete--------------
 router.delete('/:id', (req, res) => {
     Task.findOneAndRemove({
-        taskId: req.params.id
+        _id: req.params.id
     }, (err, deletedTask) => {
         if(err){
             res.send('error deleting task: ' + err.message);
