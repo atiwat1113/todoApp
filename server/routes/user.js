@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
             if(user === null){
                 res.send('Invalid');
             }else {
-                res.json(user);
+                res.redirect('/');
             }
         }
     });
