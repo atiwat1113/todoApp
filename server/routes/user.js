@@ -16,10 +16,11 @@ router.get('/users', (req, res) => {
     })
 });
 
-router.get('/:username/:password', (req, res) => {
+// sign in
+router.get('/', (req, res) => {
     User.findOne({
-        username: req.params.username,
-        password: req.params.password
+        username: req.body.username,
+        password: req.body.password
     }).exec((err, user) => {
         if(err){
             res.send('error has occured');
@@ -33,11 +34,12 @@ router.get('/:username/:password', (req, res) => {
     });
 });
 
-router.post('/:username/:password', (req, res) => {
+// sign up
+router.post('/', (req, res) => {
     let newUser = new User();
 
-    newUser.username = req.params.username;
-    newUser.password = req.params.password;
+    newUser.username = req.body.username;
+    newUser.password = req.body.password;
 
     newUser.save((err, user) => {
          if(err) {

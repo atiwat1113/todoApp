@@ -1,11 +1,18 @@
 const express = require('express');
 const userRouter = require('./routes/user'); 
 const taskRouter = require('./routes/task');
+const cors = require('cors');
 const app = express();
-const port = 8080;
+const port = 5000;
+
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    optionsSuccessStatus: 200
+};
 
 app.use(express.json()); //allowed to read json
-app.use(express.urlencoded({ extended: true})); 
+app.use(express.urlencoded({ extended: true}));
+app.use(cors(corsOptions));
 
 app.use('/user', userRouter);
 app.use('/tasks', taskRouter);
