@@ -14,8 +14,8 @@ const App = () => {
 
   const [tasks, setTasks] = useState([])
 
-  const [user, setUser] = useState(null);
-
+  const [user, setUser] = useState('admin');
+  
   // useEffect(() => {
   //   const getTasks = async () => {
   //     const taskFromServer = await fetchTasks()
@@ -33,7 +33,7 @@ const App = () => {
         username: username,
         password: password,
       },
-      withCredentials: true,
+      withCredentials: false,
       url: "http://localhost:5000/user/register",
     }).then((res) => console.log(res));
     setUser(username);
@@ -47,18 +47,20 @@ const App = () => {
         username: username,
         password: password,
       },
-      withCredentials: true,
+      withCredentials: false,
       url: "http://localhost:5000/user/login",
-    }).then((res) => console.log(res))
-    // .then((res) => {
-    //   console.log(res.status);
-    //   if (res.status === 404) {
-    //     alert("Invalid user");
-    //   } else {
-    //     setUser(username);
-    //   }
-    // })
-    //setUser(username);
+    }).then((res) => {
+      console.log(res.status);
+      if (res.status === 404) {
+        alert("Invalid user");
+        console.log('false');
+      } else {
+        setUser(username);
+        console.log('true')
+      }
+    })
+    // setUser(username);
+    // .then((res) => console.log(res))
   };
  
 
@@ -89,11 +91,8 @@ const App = () => {
     })
 
     const data = await res.json()
-
     setTasks([...tasks, data])
 
-    // const newTask = {user}, ...task}
-    // setTasks([...tasks, newTask])
   }
 
   //Delete Task
