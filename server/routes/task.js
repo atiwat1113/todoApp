@@ -29,10 +29,10 @@ router.put('/update', (req, res) => {
     
         tasks[updatedTaskIndex] = updatedTask;
 
-        res.status(200);
+        res.send(updatedTask);
     } else {
         console.log('Task not found');
-        res.status(404);
+        res.send(404);
     }
    
 });
@@ -41,7 +41,7 @@ router.put('/add',async (req, res) => {
     let tasks;
     let doc = await User.findOne({username: req.user.username},(err,user) => {
         if(err) throw err;
-        if(!user) res.send('cannot find user');
+        if(!user) res.send(404);
         else {
             tasks = user.task;
         }
@@ -58,7 +58,7 @@ router.put('/add',async (req, res) => {
     doc.task = tasks;
     await doc.save();
     res.json(doc);
-    res.status(200);
+
     
 });
 
