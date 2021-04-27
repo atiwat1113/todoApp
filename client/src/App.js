@@ -16,14 +16,14 @@ const App = () => {
 
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const getTasks = async () => {
-      const taskFromServer = await fetchTasks()
-      setTasks(taskFromServer)
-    }
+  // useEffect(() => {
+  //   const getTasks = async () => {
+  //     const taskFromServer = await fetchTasks()
+  //     setTasks(taskFromServer)
+  //   }
 
-    getTasks()
-  }, [])
+  //   getTasks()
+  // }, [])
 
   //register
   const register = ({username,password}) => {
@@ -34,8 +34,9 @@ const App = () => {
         password: password,
       },
       withCredentials: true,
-      url: "http://localhost:5000/register",
+      url: "http://localhost:5000/user/register",
     }).then((res) => console.log(res));
+    setUser(username);
   };
 
   //login
@@ -47,21 +48,19 @@ const App = () => {
         password: password,
       },
       withCredentials: true,
-      url: "http://localhost:5000/login",
-    }).then((res) => console.log(res));
+      url: "http://localhost:5000/user/login",
+    }).then((res) => console.log(res))
+    // .then((res) => {
+    //   console.log(res.status);
+    //   if (res.status === 404) {
+    //     alert("Invalid user");
+    //   } else {
+    //     setUser(username);
+    //   }
+    // })
+    //setUser(username);
   };
  
-  //getUser
-  const getUser = () => {
-    Axios({
-      method: "GET",
-      withCredentials: true,
-      url: "http://localhost:5000/user",
-    }).then((res) => {
-      setUser(res.user);
-      console.log(res.user);
-    });
-  };
 
   //Fetch Tasks
   const fetchTasks = async () => {
@@ -129,7 +128,7 @@ const App = () => {
       <div className = 'container'>
         <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} />
         <Route exact path='/' render={(props) => (
-          <Login onLogin={login} onRegister={register} onGetUser={getUser} />
+          <Login onLogin={login} onRegister={register} />
         )} />
         {user? <Redirect to = '/todo' /> : null}
         <Route path='/todo' exact render={(props) => (
