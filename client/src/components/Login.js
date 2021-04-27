@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 
-function Login({onLogin,onRegister,onGetUser}) {
+function Login({onLogin,onRegister}) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -12,7 +12,6 @@ function Login({onLogin,onRegister,onGetUser}) {
     }
     onLogin({username,password});
     setPassword('');
-    onGetUser();
   }
 
   const onSignUp =() => {
@@ -22,7 +21,6 @@ function Login({onLogin,onRegister,onGetUser}) {
     }
     onRegister({username,password});
     setPassword('');
-    onGetUser();
   }
 
   return (
