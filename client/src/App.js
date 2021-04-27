@@ -14,7 +14,7 @@ const App = () => {
 
   const [tasks, setTasks] = useState([])
 
-  const [user, setUser] = useState('admin');
+  const [user, setUser] = useState('');
   
   // useEffect(() => {
   //   const getTasks = async () => {
@@ -50,8 +50,8 @@ const App = () => {
       withCredentials: false,
       url: "http://localhost:5000/user/login",
     }).then((res) => {
-      console.log(res.status);
-      if (res.status === 404) {
+      console.log(res.data);
+      if (res.data === "") {
         alert("Invalid user");
         console.log('false');
       } else {
