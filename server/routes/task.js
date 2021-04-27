@@ -6,8 +6,13 @@ const User = require('../model/User.model');
 
 router.get('/', (req, res) => {
     if(req.user.username) {
-        console.log(req.user.task);
-        res.json(req.user.task);
+        User.findOne({username: req.user.username}, (err, user) => {
+            if(err) throw err;
+            if(!user) res.send('cannot find user');
+            else {
+                res.json(user.task);
+            }
+        })
     } else {
         res.send('not log in yet');
     }
@@ -17,19 +22,19 @@ router.get('/', (req, res) => {
 
 
 // --------------Put--------------
-router.put('/update', (req, res) => {
-   let tasks = req.user.task;
-   let updatedTaskIndex = tasks.findIndex(task => task.id === req.body.id);
-   if(updatedTaskIndex !== -1){
-        let updatedTask = tasks[updatedTaskIndex];
-
-        updatedTask.name = req.body.name;
-        updatedTask.dueDate = req.body.dueDate;
-        updatedTask.done = req.body.done;
-    
-        tasks[updatedTaskIndex] = updatedTask;
-
-        res.send(updatedTask);
+router.put('/update', async (req, res) => {
+    let doc = await User.findOne({username: req.user.username});
+    if(!doc){
+        console.log('cannot find user');
+        res.send('');
+    }
+    let task = doc.task.id(req.body.id);
+    if(task) {
+        task.name = req.body.name;
+        task.dueDate = req.body.dueDate;
+        task.done = req.body.done;
+        await task.save();
+        res.json(task);
     } else {
         console.log('Task not found');
         res.send('');
@@ -41,7 +46,10 @@ router.put('/add',async (req, res) => {
     let tasks;
     let doc = await User.findOne({username: req.user.username},(err,user) => {
         if(err) throw err;
-        if(!user) res.send('');
+        if(!user) {
+            console.log('cannot find user');
+            res.send('');
+        }
         else {
             tasks = user.task;
         }
