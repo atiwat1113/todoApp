@@ -17,6 +17,7 @@ const corsOptions = {
     origin: 'http://localhost:3000',
     optionsSuccessStatus: 200
 };
+app.use(cors(corsOptions));
 
 app.use(session({
 	secret: 'secret',
@@ -27,9 +28,9 @@ app.use(session({
 app.use(cookieParser('secret'));
 app.use(express.json()); //allowed to read json
 app.use(express.urlencoded({ extended: true}));
-app.use(cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
+
 passportConfig(passport);
 
 app.use('/user', userRouter);

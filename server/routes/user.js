@@ -16,10 +16,10 @@ router.get('/users', (req, res) => {
 
 // sign in
 router.post('/login', (req, res, next) => {
-    console.log('yes');
     passport.authenticate('local', (err, user, info) => {
+        console.log(user);
         if(err) throw err;
-        if(!user) res.send(404);
+        if(!user) res.send('');
         else { 
             req.logIn(user, err => {
                 if(err) throw err;

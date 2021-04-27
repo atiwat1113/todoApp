@@ -47,7 +47,7 @@ const App = () => {
         username: username,
         password: password,
       },
-      withCredentials: true,
+      withCredentials: false,
       url: "http://localhost:5000/user/login",
     }).then((res) => console.log(res))
     // .then((res) => {

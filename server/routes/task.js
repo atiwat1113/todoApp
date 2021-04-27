@@ -32,7 +32,7 @@ router.put('/update', (req, res) => {
         res.send(updatedTask);
     } else {
         console.log('Task not found');
-        res.send(404);
+        res.send('');
     }
    
 });
@@ -41,7 +41,7 @@ router.put('/add',async (req, res) => {
     let tasks;
     let doc = await User.findOne({username: req.user.username},(err,user) => {
         if(err) throw err;
-        if(!user) res.send(404);
+        if(!user) res.send('');
         else {
             tasks = user.task;
         }
@@ -78,7 +78,7 @@ router.delete('/delete', (req, res) => {
         res.status(200);
     } else {
         console.log('Task not found');
-        res.status(404);
+        res.status('');
     }
 });
 
