@@ -1,82 +1,69 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const Task = require('../model/Task.model');
-const db = 'mongodb+srv://todoAppGroup2:hightech@todo.v0rns.mongodb.net/todo?retryWrites=true&w=majority';
-
-mongoose.connect(db);
+const User = require('../model/User.model');
 
 // --------------Get--------------
-router.get('/all', (req, res) => {
-    Task.find().exec((err, tasks) => {
-        if(err){
-            res.send('error has occured: ' + err.message);
-        } else {
-            res.send(tasks);
-        }
-    });
-});
 
 router.get('/', (req, res) => {
-    Task.find({user: req.session.username}).exec((err, tasks) => {
-        if(err){
-            res.send('error has occured: ' + err.message);
-        } else {
-            res.send(tasks);
-        }
-    });
+    if(req.user.username) {
+        console.log(req.user.task);
+        res.send(req.user.task);
+    } else {
+        res.send('not log in yet');
+    }
 });
 
 // --------------Post--------------
-router.post('/', (req, res) => {
-    let newTask = new Task();
-
-    newTask.name = req.body.name;
-    newTask.dueDate = req.body.dueDate;
-    newTask.user = req.session.username;
-    newTask.done = req.body.done;
-    console.log(req.session.username);
-
-    newTask.save((err, task) => {
-        if(err) {
-            res.send('error creating a new task: ' + err.message);
-        } else {
-            res.send(task);
+router.post('/add', (req, res) => {
+    User.findOne({username: req.user.username}, (err, user) => {
+        if(err) throw err;
+        if(!user) res.send('cannot find user');
+        else {
+            
         }
-    });
+    })
+
 });
 
 // --------------Put--------------
-router.put('/:id', (req, res) => {
-    Task.findOneAndUpdate({
-        _id: req.params.id
-    }, {$set: 
-    {
-        name: req.body.name,
-        dueDate: req.body.dueDate,
-        done: req.body.done
-    }},
-    {upsert: false},
-    (err, newTask) => {
-        if(err){
-            res.send('error has occured: ' + err.message);
-        } else {
-            res.send(newTask);
-        }
-    });
+router.put('/update', (req, res) => {
+   let tasks = req.user.task;
+   let updatedTaskIndex = tasks.findIndex(task => task.id === req.body.id);
+   if(updatedTaskIndex !== -1){
+        let updatedTask = tasks[updatedTaskIndex];
+
+        updatedTask.name = req.body.name;
+        updatedTask.dueDate = req.body.dueDate;
+        updatedTask.done = req.body.done;
+    
+        tasks[updatedTaskIndex] = updatedTask;
+
+        res.status(200);
+    } else {
+        console.log('Task not found');
+        res.status(404);
+    }
+   
 });
 
 // --------------Delete--------------
-router.delete('/:id', (req, res) => {
-    Task.findOneAndRemove({
-        _id: req.params.id
-    }, (err, deletedTask) => {
-        if(err){
-            res.send('error deleting task: ' + err.message);
-        } else {
-            res.send(deletedTask);
-        }
-    });
+router.delete('/delete', (req, res) => {
+    let tasks = req.user.task;
+   let deletedTaskIndex = tasks.findIndex(task => task.id === req.body.id);
+   if(deletedTaskIndex !== -1){
+        let deletedTask = tasks[deletedTaskIndex];
+        let task = tasks[0];
+
+        tasks[0] = deletedTask;
+        tasks[deletedTaskIndex] = task;
+        tasks.shift();
+
+        res.send(deletedTask)
+        res.status(200);
+    } else {
+        console.log('Task not found');
+        res.status(404);
+    }
 });
 
 module.exports = router;

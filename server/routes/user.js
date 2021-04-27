@@ -1,10 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 const User = require('../model/User.model');
-const db = 'mongodb+srv://todoAppGroup2:hightech@todo.v0rns.mongodb.net/todo?retryWrites=true&w=majority';
-
-mongoose.connect(db);
+const passport = require('passport');
 
 router.get('/users', (req, res) => {
     User.find().exec((err, users) => {
@@ -17,42 +15,36 @@ router.get('/users', (req, res) => {
 });
 
 // sign in
-router.post('/', (req, res) => {
-    User.findOne({
-        username: req.body.username,
-        password: req.body.password
-    }).exec((err, user) => {
-        if(err){
-            res.send('error has occured');
-        } else {
-            if(user === null){
-                res.send({});
-            }else {
-                req.session.username = user.username;
-                console.log(req.session);
-                res.send(user);
-               
-                
-
-            }
+router.post('/', (req, res, next) => {
+    passport.authenticate('local', (err, user, info) => {
+        if(err) throw err;
+        if(!user) res.send('No User Exists');
+        else { 
+            req.logIn(user, err => {
+                if(err) throw err;
+                console.log(req.user);
+                res.redirect('/todo');
+            });
         }
-    });
+    })(req, res, next);
 });
 
 // sign up
 router.post('/signup', (req, res) => {
-    let newUser = new User();
-
-    newUser.username = req.body.username;
-    newUser.password = req.body.password;
-
-    newUser.save((err, user) => {
-         if(err) {
-            res.send(err.message);
-        } else {
-            res.send(user);
+    User.findOne({username: req.body.username}, async (err,doc) => {
+        if(err) throw err;
+        if(doc) res.send('User Already Exists');
+        if(!doc) {
+            const hashedPassword = await bcrypt.hash(req.body.password, 10);
+            const newUser = new User({
+                username: req.body.username,
+                password: hashedPassword,
+                task: []
+            });
+            await newUser.save();
+            res.send(newUser);
         }
-    }); 
+    });
 
 });
 
