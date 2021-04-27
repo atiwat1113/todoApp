@@ -7,11 +7,14 @@ import AddTask from './components/AddTask'
 import Footer from './components/Footer'
 import About from './components/About'
 import Login from './components/Login'
+import Axios from "axios";
 
 const App = () => { 
   const [showAddTask, setShowAddTask] = useState(true)
 
   const [tasks, setTasks] = useState([])
+
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
     const getTasks = async () => {
@@ -22,25 +25,43 @@ const App = () => {
     getTasks()
   }, [])
 
-  //login
-  const checkValidUser = async ({username,password}) => {
-    const res = await fetch('http://localhost:5000/user', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
+  //register
+  const register = ({username,password}) => {
+    Axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
       },
-      body: JSON.stringify({username,password}) // javascript to json
-    })
+      withCredentials: true,
+      url: "http://localhost:5000/register",
+    }).then((res) => console.log(res));
+  };
 
-    const data = await res.json();
-
-    if (data.username===username && data.password===password) {
-      console.log("true");
-    } else {
-      alert("Invalid username or password");
-      console.log("false");
-    }
-  }
+  //login
+  const login = ({username,password}) => {
+    Axios({
+      method: "POST",
+      data: {
+        username: username,
+        password: password,
+      },
+      withCredentials: true,
+      url: "http://localhost:5000/login",
+    }).then((res) => console.log(res));
+  };
+ 
+  //getUser
+  const getUser = () => {
+    Axios({
+      method: "GET",
+      withCredentials: true,
+      url: "http://localhost:5000/user",
+    }).then((res) => {
+      setUser(res.user);
+      console.log(res.user);
+    });
+  };
 
   //Fetch Tasks
   const fetchTasks = async () => {
@@ -72,8 +93,7 @@ const App = () => {
 
     setTasks([...tasks, data])
 
-    // const id = Math.floor(Math.random()*10000) + 1
-    // const newTask = {id, ...task}
+    // const newTask = {user}, ...task}
     // setTasks([...tasks, newTask])
   }
 
@@ -109,13 +129,14 @@ const App = () => {
       <div className = 'container'>
         <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask} />
         <Route exact path='/' render={(props) => (
-          <Login onLogin={checkValidUser} />
+          <Login onLogin={login} onRegister={register} onGetUser={getUser} />
         )} />
+        {user? <Redirect to = '/todo' /> : null}
         <Route path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show' }
-            <p><Link to="/" style={{float: 'right'}}>Log out</Link></p>
+            <p><Link to="/" style={{float: 'right'}} onClick={()=> setUser('')} >Log out</Link></p>
           </>
         )} />
         <Route path='/about' component={About} />

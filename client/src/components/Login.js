@@ -1,35 +1,45 @@
-import React from 'react'
-import {useState} from 'react'
+import React, { useState } from "react";
 
-export const Login = ({onLogin}) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
 
-    const onClick = (e) => {
-        e.preventDefault()
+function Login({onLogin,onRegister,onGetUser}) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-        if(!username || !password) {
-            alert('Please enter username and password')
-            return
-        }
-        onLogin({username,password}); 
-        setPassword('')
+  const onSignIn =() => {
+    if(!username || !password) {
+        alert('Please enter username and password')
+        return
     }
+    onLogin({username,password});
+    setPassword('');
+    onGetUser();
+  }
 
-    return (
-        <form  className='login-form'>
-            <h2>Login</h2>
-            <div className='form-control'>
-                <label>Username</label>
-                <input type='text' placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)}/>
-            </div>
-            <div className='form-control'>
-                <label>Password</label>
-                <input type='password' placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
-            </div>
-            <button className='btn' onClick={onClick}>Sign in</button>
-        </form>
-    )
+  const onSignUp =() => {
+    if(!username || !password) {
+        alert('Please enter username and password')
+        return
+    }
+    onRegister({username,password});
+    setPassword('');
+    onGetUser();
+  }
+
+  return (
+      <div>
+        <h2>Login</h2>
+        <div className='form-control'>
+            <label>Username</label>
+            <input type='text' placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)}/>
+        </div>
+        <div className='form-control'>
+            <label>Password</label>
+            <input type='password' placeholder='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
+        </div>
+        <button className='btn' onClick={onSignIn}>Sign in</button>
+        <button className='btn' onClick={onSignUp}>Sign Up</button>
+      </div>
+  );
 }
 
-export default Login
+export default Login;
