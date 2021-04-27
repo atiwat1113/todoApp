@@ -7,23 +7,14 @@ const User = require('../model/User.model');
 router.get('/', (req, res) => {
     if(req.user.username) {
         console.log(req.user.task);
-        res.send(req.user.task);
+        res.json(req.user.task);
     } else {
         res.send('not log in yet');
     }
 });
 
 // --------------Post--------------
-router.post('/add', (req, res) => {
-    User.findOne({username: req.user.username}, (err, user) => {
-        if(err) throw err;
-        if(!user) res.send('cannot find user');
-        else {
-            
-        }
-    })
 
-});
 
 // --------------Put--------------
 router.put('/update', (req, res) => {
@@ -44,6 +35,31 @@ router.put('/update', (req, res) => {
         res.status(404);
     }
    
+});
+
+router.put('/add',async (req, res) => {
+    let tasks;
+    let doc = await User.findOne({username: req.user.username},(err,user) => {
+        if(err) throw err;
+        if(!user) res.send('cannot find user');
+        else {
+            tasks = user.task;
+        }
+    });
+
+    let newTask = {
+        name: req.body.name,
+        dueDate: req.body.dueDate,
+        done: false
+    };
+
+    tasks.push(newTask);
+
+    doc.task = tasks;
+    await doc.save();
+    res.json(doc);
+    res.status(200);
+    
 });
 
 // --------------Delete--------------

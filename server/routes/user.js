@@ -15,22 +15,22 @@ router.get('/users', (req, res) => {
 });
 
 // sign in
-router.post('/', (req, res, next) => {
+router.post('/login', (req, res, next) => {
     passport.authenticate('local', (err, user, info) => {
         if(err) throw err;
-        if(!user) res.send('No User Exists');
+        if(!user) res.status(404);
         else { 
             req.logIn(user, err => {
                 if(err) throw err;
-                console.log(req.user);
-                res.redirect('/todo');
+                res.send(req.user);
+                res.status(200);
             });
         }
     })(req, res, next);
 });
 
 // sign up
-router.post('/signup', (req, res) => {
+router.post('/register', (req, res) => {
     User.findOne({username: req.body.username}, async (err,doc) => {
         if(err) throw err;
         if(doc) res.send('User Already Exists');
