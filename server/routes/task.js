@@ -43,51 +43,55 @@ router.put('/update', async (req, res) => {
 });
 
 router.put('/add',async (req, res) => {
-    let tasks;
     let doc = await User.findOne({username: req.user.username},(err,user) => {
         if(err) throw err;
         if(!user) {
             console.log('cannot find user');
             res.send('');
         }
-        else {
-            tasks = user.task;
-        }
     });
-
     let newTask = {
         name: req.body.name,
         dueDate: req.body.dueDate,
         done: false
     };
 
-    tasks.push(newTask);
-
-    doc.task = tasks;
+    doc.task.push(newTask);
     await doc.save();
     res.json(doc);
 
     
 });
 
-// --------------Delete--------------
-router.delete('/delete', (req, res) => {
-    let tasks = req.user.task;
-   let deletedTaskIndex = tasks.findIndex(task => task.id === req.body.id);
-   if(deletedTaskIndex !== -1){
-        let deletedTask = tasks[deletedTaskIndex];
-        let task = tasks[0];
+router.put('/delete', async (req, res) => {
+    let doc = await User.findOne({username: req.user.username}, (err, user) => {
+        if(err) throw err;
+    });
+    if(!doc){
+        console.log('cannot find user');
+        res.send('');
+    }else {
+        const deletedTaskIndex = doc.task.findIndex(eachTask => eachTask._id.toString() === req.body.id);
+        if(deletedTaskIndex != -1){
+            const task = doc.task[doc.task.length-1];
+            const deletedTask = doc.task[deletedTaskIndex];
+            doc.task[deletedTaskIndex] = task;
+            doc.task[doc.task.length-1] = deletedTask;
 
-        tasks[0] = deletedTask;
-        tasks[deletedTaskIndex] = task;
-        tasks.shift();
-
-        res.send(deletedTask)
-        res.status(200);
-    } else {
-        console.log('Task not found');
-        res.status('');
+            doc.task.pop();
+            await doc.save();
+            res.send(deletedTask);
+        } else {
+            console.log('cannot find task');
+            res.send('');
+        }
     }
+
+    
+   
 });
+
+// --------------Delete--------------
+
 
 module.exports = router;
