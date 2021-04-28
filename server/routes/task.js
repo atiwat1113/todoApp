@@ -73,11 +73,10 @@ router.put('/delete', async (req, res) => {
     }else {
         const deletedTaskIndex = doc.task.findIndex(eachTask => eachTask._id.toString() === req.body.id);
         if(deletedTaskIndex != -1){
-            const task = doc.task[doc.task.length-1];
             const deletedTask = doc.task[deletedTaskIndex];
-            doc.task[deletedTaskIndex] = task;
-            doc.task[doc.task.length-1] = deletedTask;
-
+            for(let i = deletedTaskIndex; i<doc.task.length-1;i++){
+                doc.task[i] = doc.task[i+1];
+            } 
             doc.task.pop();
             await doc.save();
             res.send(deletedTask);
