@@ -58,7 +58,7 @@ router.put('/add',async (req, res) => {
 
     doc.task.push(newTask);
     await doc.save();
-    res.json(doc);
+    res.json(newTask);
 
     
 });
