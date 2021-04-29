@@ -15,16 +15,29 @@ const App = () => {
   const [tasks, setTasks] = useState([])
 
   const [user, setUser] = useState('');
+
+  const [session,setSession] = useState(null);
+
+  useEffect(() => {
+    const curUser = localStorage.getItem('currentUser');
+    console.log(curUser);
+    if (!curUser) {
+      console.log(JSON.parse(curUser))
+      setUser(JSON.parse(curUser));
+    }
+    const curTasks = localStorage.getItem('currentTasks');
+    if (!curTasks) {
+      console.log(JSON.parse(curTasks))
+      setUser(JSON.parse(curTasks));
+    }
+  }, [])
   
-  // useEffect(() => {
-  //   if (!user) {
-  //     const getTasks = async () => {
-  //       const taskFromServer = await fetchTasks()
-  //       setTasks(taskFromServer)
-  //     }
-  //     getTasks()
-  //   }
-  // }, [])
+  useEffect(() => {
+    if (!user) {
+      localStorage.setItem('currentUser', JSON.stringify(user));
+      localStorage.setItem('currentTasks', JSON.stringify(tasks));
+    }
+  }, [])
 
   //register
   const register = ({username,password}) => {
@@ -59,7 +72,10 @@ const App = () => {
         setUser(username);
         console.log('true');
         setTasks(res.data.task);
-        console.log(tasks);
+        localStorage.setItem('currentUser', JSON.stringify(username));
+        localStorage.setItem('currentTasks', JSON.stringify(res.data.task));
+        setSession(res.data.session);
+        //console.log(tasks);
       }
     })
     // setUser(username);
@@ -94,7 +110,10 @@ const App = () => {
       },
       withCredentials: false,
       url: "http://localhost:5000/tasks/add",
-    }).then((res) => setTasks([...tasks, res]));
+    }).then((res) => {
+      setTasks([...tasks, res]);
+      localStorage.setItem('currentTasks', JSON.stringify([tasks, res]));
+    });
     // const res = await fetch('http://localhost:5000/tasks/add', {
     //   method: 'PUT',
     //   headers: {
