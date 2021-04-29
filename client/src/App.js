@@ -16,14 +16,16 @@ const App = () => {
 
   const [user, setUser] = useState('');
   
-  // useEffect(() => {
-  //   const getTasks = async () => {
-  //     const taskFromServer = await fetchTasks()
-  //     setTasks(taskFromServer)
-  //   }
-
-  //   getTasks()
-  // }, [])
+  useEffect(() => {
+    if (!user) {
+      const getTasks = async () => {
+        const taskFromServer = await fetchTasks()
+        setTasks(taskFromServer)
+      }
+  
+      getTasks()
+    }
+  }, [])
 
   //register
   const register = ({username,password}) => {
@@ -130,7 +132,7 @@ const App = () => {
           <Login onLogin={login} onRegister={register} />
         )} />
         {user? <Redirect to = '/todo' /> : null}
-        <Route path='/todo' exact render={(props) => (
+        <Route onAdd={()=> setTasks(fetchTasks())} path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show' }
