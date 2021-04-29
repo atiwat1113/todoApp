@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
             if(err) throw err;
             if(!user) res.send('cannot find user');
             else {
-                res.json(user.task);
+                res.send(user.task);
             }
         })
     } else {
@@ -34,7 +34,7 @@ router.put('/update', async (req, res) => {
         task.dueDate = req.body.dueDate;
         task.done = req.body.done;
         await task.save();
-        res.json(task);
+        res.send(task);
     } else {
         console.log('Task not found');
         res.send('');
@@ -58,7 +58,7 @@ router.put('/add',async (req, res) => {
 
     doc.task.push(newTask);
     await doc.save();
-    res.json(newTask);
+    res.send(newTask);
 
     
 });
