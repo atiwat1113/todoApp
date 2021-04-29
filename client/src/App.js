@@ -16,16 +16,15 @@ const App = () => {
 
   const [user, setUser] = useState('');
   
-  useEffect(() => {
-    if (!user) {
-      const getTasks = async () => {
-        const taskFromServer = await fetchTasks()
-        setTasks(taskFromServer)
-      }
-  
-      getTasks()
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (!user) {
+  //     const getTasks = async () => {
+  //       const taskFromServer = await fetchTasks()
+  //       setTasks(taskFromServer)
+  //     }
+  //     getTasks()
+  //   }
+  // }, [])
 
   //register
   const register = ({username,password}) => {
@@ -58,7 +57,9 @@ const App = () => {
         console.log('false');
       } else {
         setUser(username);
-        console.log('true')
+        console.log('true');
+        setTasks(res.data.task);
+        console.log(tasks);
       }
     })
     // setUser(username);
@@ -69,7 +70,7 @@ const App = () => {
   //Fetch Tasks
   const fetchTasks = async () => {
     const res = await fetch('http://localhost:5000/tasks')
-    const data = await res.json()
+    const data = await res
 
     return data
   }
@@ -84,23 +85,32 @@ const App = () => {
 
   //Add Task
   const addTask = async(task) => {
-    const res = await fetch('http://localhost:5000/tasks', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json'
+    Axios({
+      method: "PUT",
+      data: {
+        name: task.name,
+        dueDate: task.dueDate,
+        done: task.done
       },
-      body: JSON.stringify(task) // javascript to json
-    })
-
-    const data = await res.json()
-    setTasks([...tasks, data])
-
+      withCredentials: false,
+      url: "http://localhost:5000/tasks/add",
+    }).then((res) => setTasks([...tasks, res]));
+    // const res = await fetch('http://localhost:5000/tasks/add', {
+    //   method: 'PUT',
+    //   headers: {
+    //     'Content-type': 'application/json'
+    //   },
+    //   body: JSON.stringify(task) // javascript to json
+    // })
+    // console.log('aaa');
+    // const data = await res;
+    // setTasks([...tasks, data]);
   }
 
   //Delete Task
   const deleteTask = async(id) => {
-    await fetch(`http://localhost:5000/tasks/${id}`, {
-      method: 'DELETE'
+    await fetch(`http://localhost:5000/tasks/delete`, {
+      method: 'PUT'
     })
     
     setTasks(tasks.filter((task) => task.id !== id))
@@ -111,7 +121,7 @@ const App = () => {
     const taskToToggle = await fetchTask(id)
     const updTask = {...taskToToggle, done:!taskToToggle.done}
 
-    const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+    const res = await fetch(`http://localhost:5000/tasks/update`, {
       method: 'PUT',
       headers: {
         'Content-type' : 'application/json'
@@ -132,7 +142,7 @@ const App = () => {
           <Login onLogin={login} onRegister={register} />
         )} />
         {user? <Redirect to = '/todo' /> : null}
-        <Route onAdd={()=> setTasks(fetchTasks())} path='/todo' exact render={(props) => (
+        <Route path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
             {tasks.length > 0 ? <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleDone}/> : 'No Tasks To Show' }
