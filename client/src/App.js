@@ -25,10 +25,17 @@ const App = () => {
       console.log(JSON.parse(curUser))
       setUser(JSON.parse(curUser));
     }
+
     const curTasks = localStorage.getItem('currentTasks');
     if (!curTasks) {
       console.log(JSON.parse(curTasks))
       setUser(JSON.parse(curTasks));
+    }
+
+    const curSession = localStorage.getItem('currentSession');
+    if (!curSession) {
+      console.log(JSON.parse(curSession))
+      setUser(JSON.parse(curSession));
     }
   }, [])
   
@@ -36,6 +43,7 @@ const App = () => {
     if (!user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       localStorage.setItem('currentTasks', JSON.stringify(tasks));
+      localStorage.setItem('currentTasks', JSON.stringify(session));
     }
   }, [])
 
@@ -72,9 +80,11 @@ const App = () => {
         setUser(username);
         console.log('true');
         setTasks(res.data.task);
+        console.log(res.session);
         localStorage.setItem('currentUser', JSON.stringify(username));
         localStorage.setItem('currentTasks', JSON.stringify(res.data.task));
-        setSession(res.data.session);
+        localStorage.setItem('currentSession', JSON.stringify(res.session));
+        setSession(res.session);
         //console.log(tasks);
       }
     })
@@ -160,7 +170,7 @@ const App = () => {
         <Route exact path='/' render={(props) => (
           <Login onLogin={login} onRegister={register} />
         )} />
-        {user? <Redirect to = '/todo' /> : null}
+        {user? <Redirect to = {{pathname:'/todo', user:user, tasks:tasks}}  /> : null}
         <Route path='/todo' exact render={(props) => (
           <>
             {showAddTask && <AddTask onAdd={addTask} />}  {/* if showAddTask === true -> show AddTask */}
