@@ -145,23 +145,37 @@ const App = () => {
     setTasks(tasks.filter((task) => task.id !== id))
   }
 
-  //Toggle Done
-  const toggleDone = async (id) => {
-    const taskToToggle = await fetchTask(id)
-    const updTask = {...taskToToggle, done:!taskToToggle.done}
-
-    const res = await fetch(`http://localhost:5000/tasks/update`, {
-      method: 'PUT',
-      headers: {
-        'Content-type' : 'application/json'
+  const deleteTask = async(id) => {
+    Axios({
+      method: "PUT",
+      data: {
+        id: id
       },
-      body: JSON.stringify(updTask)
-    })
+      withCredentials: true,
+      url: "http://localhost:5000/tasks/delete",
+    }).then((res) => {
+      setTasks(tasks.filter((task) => task.id !== id))
+    });
 
-    const data = await res.json()
 
-    setTasks(tasks.map((task) => task.id === id ? {...task, done : data.done} : task))
-  }
+
+
+  //Toggle Done
+
+
+
+  const toggleDone = async(id) => {
+    Axios({
+      method: "PUT",
+      data: {
+        id: id
+      },
+      withCredentials: true,
+      url: "http://localhost:5000/tasks/update",
+    }).then((res) => {
+      setTasks(tasks.map((task) => task.id === id ? {...task, done : data.done} : task))
+    });
+
 
   return (
     <Router>
@@ -184,5 +198,5 @@ const App = () => {
     </Router>
   )
 }
-
-export default App;
+  }
+export default App; }
