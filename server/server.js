@@ -15,19 +15,19 @@ mongoose.connect(db);
 
 const corsOptions = {
     origin: 'http://localhost:3000',
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 };
-app.use(cors(corsOptions));
+app.use(express.json()); //allowed to read json
+app.use(express.urlencoded({ extended: false}));
 
 app.use(session({
 	secret: 'secret',
-	resave: true,
-	saveUninitialized: true
+	resave: false,
+	saveUninitialized: false
 }))
-
-app.use(cookieParser('secret'));
-app.use(express.json()); //allowed to read json
-app.use(express.urlencoded({ extended: true}));
+app.use('*',cors(corsOptions));
 app.use(passport.initialize());
 app.use(passport.session());
 

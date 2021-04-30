@@ -43,6 +43,7 @@ router.put('/update', async (req, res) => {
 });
 
 router.put('/add',async (req, res) => {
+    console.log(req.session);
     let doc = await User.findOne({username: req.user.username},(err,user) => {
         if(err) throw err;
         if(!user) {

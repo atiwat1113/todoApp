@@ -47,7 +47,7 @@ const App = () => {
         username: username,
         password: password,
       },
-      withCredentials: false,
+      withCredentials: true,
       url: "http://localhost:5000/user/register",
     }).then((res) => console.log(res));
     setUser(username);
@@ -61,7 +61,7 @@ const App = () => {
         username: username,
         password: password,
       },
-      withCredentials: false,
+      withCredentials: true,
       url: "http://localhost:5000/user/login",
     }).then((res) => {
       console.log(res.data);
@@ -108,7 +108,7 @@ const App = () => {
         dueDate: task.dueDate,
         done: task.done
       },
-      withCredentials: false,
+      withCredentials: true,
       url: "http://localhost:5000/tasks/add",
     }).then((res) => {
       setTasks([...tasks, res]);
