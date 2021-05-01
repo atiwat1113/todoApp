@@ -59,7 +59,7 @@ router.put('/add',async (req, res) => {
 
     doc.task.push(newTask);
     await doc.save();
-    res.send(newTask);
+    res.send(doc.task[doc.task.length-1]);
 
     
 });
