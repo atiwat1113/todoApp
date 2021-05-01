@@ -137,13 +137,6 @@ const App = () => {
   }
 
   //Delete Task
-  const deleteTask = async(id) => {
-    await fetch(`http://localhost:5000/tasks/delete`, {
-      method: 'PUT'
-    })
-    
-    setTasks(tasks.filter((task) => task.id !== id))
-  }
 
   const deleteTask = async(id) => {
     Axios({
@@ -155,15 +148,12 @@ const App = () => {
       url: "http://localhost:5000/tasks/delete",
     }).then((res) => {
       setTasks(tasks.filter((task) => task.id !== id))
-    });
+    })};
 
 
 
 
   //Toggle Done
-
-
-
   const toggleDone = async(id) => {
     Axios({
       method: "PUT",
@@ -173,8 +163,8 @@ const App = () => {
       withCredentials: true,
       url: "http://localhost:5000/tasks/update",
     }).then((res) => {
-      setTasks(tasks.map((task) => task.id === id ? {...task, done : data.done} : task))
-    });
+      setTasks(tasks.map((task) => task.id === id ? {...task, done : res.data.done} : task))
+    })};
 
 
   return (
@@ -198,5 +188,4 @@ const App = () => {
     </Router>
   )
 }
-  }
-export default App; }
+export default App; 
