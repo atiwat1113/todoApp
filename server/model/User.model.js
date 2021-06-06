@@ -6,7 +6,7 @@ var UserSchema = new Schema({
     password: String,
     task: [{
         name: String,
-        dueDate: Date,
+        dueDate: String,
         done: Boolean
     }]
 });

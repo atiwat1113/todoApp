@@ -110,7 +110,7 @@ const App = () => {
   }
 
   //Add Task
-  const addTask = async(task) => {
+  const addTask = async (task) => {
     Axios({
       method: "PUT",
       data: {
@@ -120,8 +120,9 @@ const App = () => {
       },
       withCredentials: true,
       url: "http://localhost:5000/tasks/add",
-    }).then((res) => {
-      setTasks([...tasks, res]);
+    }).then(async (res) => {
+      console.log(res.data)
+      setTasks([...tasks, res.data]);
       localStorage.setItem('currentTasks', JSON.stringify([tasks, res]));
     });
     // const res = await fetch('http://localhost:5000/tasks/add', {
@@ -147,23 +148,27 @@ const App = () => {
       withCredentials: true,
       url: "http://localhost:5000/tasks/delete",
     }).then((res) => {
-      setTasks(tasks.filter((task) => task.id !== id))
+      setTasks(tasks.filter((task) => task._id.toString() !== id))
     })};
 
 
 
 
   //Toggle Done
-  const toggleDone = async(id) => {
+  const toggleDone = async(task) => {
     Axios({
       method: "PUT",
       data: {
-        id: id
+        id: task._id.toString(),
+        name: task.name,
+        dueDate: task.dueDate,
+        done: !task.done
       },
       withCredentials: true,
       url: "http://localhost:5000/tasks/update",
     }).then((res) => {
-      setTasks(tasks.map((task) => task.id === id ? {...task, done : res.data.done} : task))
+      console.log(res.data)
+      setTasks(tasks.map((task2) => task2._id.toString() === task._id.toString() ? {...task2, done : res.data.done} : task2))
     })};
 
 

@@ -30,11 +30,12 @@ router.put('/update', async (req, res) => {
     }
     let task = doc.task.id(req.body.id);
     if(task) {
-        task.name = req.body.name;
-        task.dueDate = req.body.dueDate;
-        task.done = req.body.done;
-        await task.save();
-        res.send(task);
+        doc.task.id(req.body.id).name = req.body.name;
+        doc.task.id(req.body.id).dueDate = req.body.dueDate;
+        doc.task.id(req.body.id).done = req.body.done;
+        console.log(doc.task.id(req.body.id))
+        await doc.save();
+        res.send(doc.task.id(req.body.id));
     } else {
         console.log('Task not found');
         res.send('');
